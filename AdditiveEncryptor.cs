@@ -43,7 +43,7 @@ namespace BZ1
             {
                 int a = charsTable.FirstOrDefault(x => x.Value == message[i]).Key + encryptKey;
                 char s = charsTable[a];
-                stringBuilder.Append(s);
+                stringBuilder.Append(s); 
             }
             Console.WriteLine("New message: " + stringBuilder);
         }
