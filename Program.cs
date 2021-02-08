@@ -14,8 +14,9 @@ namespace BZ1
         static void Main(string[] args)
         {
             MultipticativeCrypter muliCry = new MultipticativeCrypter();
-
-            muliCry.Encrypt();
+            AdditiveEncryptor additiveEncryptor = new AdditiveEncryptor();
+            PlayfereEncryptor playfereEncryptor = new PlayfereEncryptor();
+            playfereEncryptor.Encrypt();
             Console.ReadKey();
         }
     }
