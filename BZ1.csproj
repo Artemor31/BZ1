@@ -46,6 +46,7 @@
     <Compile Include="AdditiveEncryptor.cs" />
     <Compile Include="IEncryptor.cs" />
     <Compile Include="MultipticativeCrypter.cs" />
+    <Compile Include="PlayfereEncryptor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -21,10 +21,12 @@ namespace BZ1
             Console.WriteLine("Enter massage to decrypt: ");
             string message = Console.ReadLine();
             StringBuilder stringBuilder = new StringBuilder();
+            /////////////////////////////
+            Console.WriteLine(alphabetVal);
 
             for (int i = 0; i < message.Length; i++)
             {
-                int a = charsTable.FirstOrDefault(x => x.Value == message[i]).Key + decryptKey;
+                int a = (charsTable.FirstOrDefault(x => x.Value == message[i]).Key - decryptKey) % alphabetVal;
                 char s = charsTable[a];
                 stringBuilder.Append(s);
             }
@@ -41,7 +43,7 @@ namespace BZ1
 
             for (int i = 0; i < message.Length; i++)
             {
-                int a = charsTable.FirstOrDefault(x => x.Value == message[i]).Key + encryptKey;
+                int a = (charsTable.FirstOrDefault(x => x.Value == message[i]).Key + encryptKey) % alphabetVal;
                 char s = charsTable[a];
                 stringBuilder.Append(s); 
             }
