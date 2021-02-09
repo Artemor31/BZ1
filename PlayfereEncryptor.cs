@@ -11,19 +11,16 @@ namespace BZ1
     {
         const string SYMBOLS_FILE = "symbols.txt";
         char[] message = new char[] { 's' };
-        string alphabet = File.ReadAllText(SYMBOLS_FILE).Replace(" ", "");
-
-        int firstI, firstJ;
-        int seconsI, secondJ;
-
-        string s1 = "", s2 = ""; //строки для хранения зашифрованного символа 
-        string encodetString = ""; 
+        char[] keyWord = new char[] { 's' };
+        char[] alphabet = File.ReadAllText(SYMBOLS_FILE).Replace(" ", "").ToCharArray();
+        char[,] table;
+        int firstI, firstJ, secondI, secondJ;
         int rows = 0, columns = 0;
         string text = "";
 
         public void Decrypt()
         {
-
+            return;
         }
 
         public void Encrypt()

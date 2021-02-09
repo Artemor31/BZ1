@@ -29,6 +29,10 @@ namespace BZ1
             }
             Console.WriteLine("New message: " + stringBuilder);
         }
+        public void AYE()
+        {
+
+        }
         public void Encrypt()
         {
             ReadEncryptKey();
