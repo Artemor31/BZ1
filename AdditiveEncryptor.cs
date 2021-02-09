@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BZ1
 {
-    public class AdditiveEncryptor : IEncryptor
+    public class AdditiveEncryptor : IEncryptor 
     {
         const string SYMBOLS_FILE = "symbols.txt";
 

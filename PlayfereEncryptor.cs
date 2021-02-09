@@ -16,16 +16,11 @@ namespace BZ1
         int firstI, firstJ;
         int seconsI, secondJ;
 
-
-
         string s1 = "", s2 = ""; //строки для хранения зашифрованного символа 
         string encodetString = ""; 
         int rows = 0, columns = 0;
-        int i, j;
         string text = "";
 
-        bool isValid = false;
-        
         public void Decrypt()
         {
 
@@ -33,69 +28,151 @@ namespace BZ1
 
         public void Encrypt()
         {
+            ReadKeyWordFormConsole();
             ReadColumnCountFromConsole();
-            ReadMessageFormConsole();
+            PutKeyWordInTable();
+            EncryptPairs(FormateNewArray());
+        }
 
-            var table = new char[rows, columns];
+        private void PutKeyWordInTable()
+        {
+            table = new char[rows, columns];
+            for (int i = 0; i < keyWord.Length; i++)
+                table[i / columns, i % columns] = keyWord[i];
 
-            // Вписываем в нее ключевое слово
-            for (i = 0; i < message.Length; i++)
-            {
-                table[i / columns, i % columns] = message[i];
-            }
-            // Исключаем уникальные символы ключевого слова из алфавита
-            char[] alphabetChar = alphabet.ToCharArray().Except(message).ToArray();
-
-            // Вписываем алфавит
-            for (i = 0; i < alphabet.Length; i++)
+            alphabet = alphabet.Except(keyWord).ToArray();
+            for (int i = 0; i < alphabet.Length; i++)
             {
                 int position = i + keyWord.Length;
                 table[position / columns, position % columns] = alphabet[i];
             }
 
-            for (i = 0; i < rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (j = 0; j < columns; j++)
-                {
+                for (int j = 0; j < columns; j++)
                     Console.Write(table[i, j] + " ");
-                }
                 Console.WriteLine();
             }
 
-
-
-
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < message.Length; i++)
-                sb.Append(message[i]);
-            Console.WriteLine("message: " + sb);
-            Console.WriteLine("col and row : " + columns + " : " + rows);
         }
-
-        private void ReadMessageFormConsole()
+        private void ReadKeyWordFormConsole()
         {
-            while (message.Except(alphabet).Any())
+            while (keyWord.Except(alphabet).Any())
             {
-                Console.WriteLine("Write message to encrypt");
-                message = Console.ReadLine().Replace(" ", "").ToCharArray().Distinct().ToArray();
+                Console.WriteLine("Write keyWord");
+                keyWord = Console.ReadLine().Replace(" ", "").ToCharArray().Distinct().ToArray();
             }
         }
-
         private void ReadColumnCountFromConsole()
         {
             Console.WriteLine("Enter column count: ");
             while (!(Int32.TryParse(Console.ReadLine(), out columns)))// && isValid))
             {
-            //    if(isValid)
-            //    if(columns != 0)
-            //        rows = alphabet.Length / columns;
-            //    isValid = (rows > 1) && (rows * columns == alphabet.Length) && (columns > 1);
+                //    if(isValid)
+                //    if(columns != 0)
+                //        rows = alphabet.Length / columns;
+                //    isValid = (rows > 1) && (rows * columns == alphabet.Length) && (columns > 1);
                 Console.WriteLine("Enter valid column count");
             }
             rows = alphabet.Length / columns;
         }
+        private void GetEncryptableText()
+        {
+            Console.WriteLine("Enter text:");
+            text = Console.ReadLine();
+
+            if (text.Length % 2 != 0)
+                text = text.PadRight((text.Length + 1), 'я');
+        }
+        private string[] FormateNewArray()
+        {
+            GetEncryptableText();
+            int len = text.Length / 2;
+            string[] str = new string[len];
+            int l = -1;
+
+            for (int i = 0; i < text.Length; i += 2)
+            {
+                l++;
+                if (l < len)
+                {
+                    //new_array[i] = old_array[i] + old_array[i+1]
+                    str[l] = Convert.ToString(text[i]) + Convert.ToString(text[i + 1]);
+                }
+            }
+            return str;
+        }
+        private void EncryptPairs(string[] str)
+        {
+            string encodetString = "";
+            string s1 = null, s2 = null;
+            foreach (string both in str)
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        //first symb
+                        if (both[0] == (table[i, j]))
+                        {
+                            firstI = i;
+                            firstJ = j;
+
+                        }
+                        //second symb
+                        if (both[1] == (table[i, j]))
+                        {
+                            secondI = i;
+                            secondJ = j;
+
+                        }
+                    }
+                }
+                if (firstI == secondI)
+                    PairInSameRow(out s1, out s2);
+
+                if (firstJ == secondJ)
+                    PairInSameColumn(out s1, out s2);
+
+                if (firstI != secondI && firstJ != secondJ)
+                    PairInDifferentColAndRow(out s1, out s2);
 
 
+                if (s1 == s2)
+                    encodetString = encodetString + s1 + "я" + s2;
+                else
+                    encodetString = encodetString + s1 + s2;
+            }
+            Console.WriteLine(encodetString);
+        }
+        private void PairInSameRow(out string s1, out string s2)
+        {
+            if (firstJ == columns - 1) /*если символ последний в строке, кодируем его первым символом из матрицы*/
+                s1 = Convert.ToString(table[firstI, 0]);
+            else //если символ не последний, кодируем его стоящим справа от него
+                s1 = Convert.ToString(table[firstI, firstJ + 1]);
+
+            if (secondJ == columns - 1) /*если символ последний в строке кодируем его первым символом из матрицы*/
+                s2 = Convert.ToString(table[secondI, 0]);
+            else //если символ не последний, кодируем его стоящим справа от него
+                s2 = Convert.ToString(table[secondI, secondJ + 1]);
+        }
+        private void PairInSameColumn(out string s1, out string s2)
+        {
+            if (firstI == rows - 1)
+                s1 = Convert.ToString(table[0, firstJ]);
+            else
+                s1 = Convert.ToString(table[firstI + 1, firstJ]);
+
+            if (secondI == rows - 1)
+                s2 = Convert.ToString(table[0, secondJ]);
+            else
+                s2 = Convert.ToString(table[secondI + 1, secondJ]);
+        }
+        private void PairInDifferentColAndRow(out string s1, out string s2)
+        {
+            s1 = Convert.ToString(table[firstI, secondJ]);
+            s2 = Convert.ToString(table[secondI, firstJ]);
+        }
     }
 }
