@@ -16,6 +16,8 @@ namespace BZ1
         int firstI, firstJ;
         int seconsI, secondJ;
 
+
+
         string s1 = "", s2 = ""; //строки для хранения зашифрованного символа 
         string encodetString = ""; 
         int rows = 0, columns = 0;
