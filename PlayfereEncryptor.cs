@@ -65,10 +65,6 @@ namespace BZ1
             Console.WriteLine("Enter column count: ");
             while (!(Int32.TryParse(Console.ReadLine(), out columns)))// && isValid))
             {
-                //    if(isValid)
-                //    if(columns != 0)
-                //        rows = alphabet.Length / columns;
-                //    isValid = (rows > 1) && (rows * columns == alphabet.Length) && (columns > 1);
                 Console.WriteLine("Enter valid column count");
             }
             rows = alphabet.Length / columns;

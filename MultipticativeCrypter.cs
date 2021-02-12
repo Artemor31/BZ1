@@ -12,6 +12,7 @@ namespace BZ1
 
         private Dictionary<int, char> charsTable = null;
         private int encryptKey, decryptKey, alphabetVal;
+        string finalText;
 
         public void Decrypt()
         {
@@ -27,11 +28,9 @@ namespace BZ1
                 char s = charsTable[a];
                 stringBuilder.Append(s);
             }
-            Console.WriteLine("New message: " + stringBuilder);
-        }
-        public void AYE()
-        {
-
+            finalText = stringBuilder.ToString();
+            Console.WriteLine("New message: " + finalText);
+            PrintAnanlytics();
         }
         public void Encrypt()
         {
@@ -46,7 +45,28 @@ namespace BZ1
                 char s = charsTable[a];
                 stringBuilder.Append(s);
             }
-            Console.WriteLine("New message: " + stringBuilder);
+            finalText = stringBuilder.ToString();
+            Console.WriteLine("New message: " + finalText);
+            PrintAnanlytics();
+        }
+        /// <summary>
+        /// Выводит в консоль пары ключей, пригодных для текущего алфавита
+        /// </summary>
+        public void PrintKeyPairs()
+        {
+            if (charsTable == null)
+                CreateDictionary(SYMBOLS_FILE);
+            int m = charsTable.Count;
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if ((i*j) % m == 1)
+                    {
+                        Console.WriteLine(i + " : " j);
+                    }
+                }
+            }
         }
 
         private void CreateDictionary(string inputFile)
@@ -60,8 +80,6 @@ namespace BZ1
             for (int i = 0; i < str.Length; i++)
                 charsTable.Add(i, str[i]);
 
-            foreach (var item in charsTable)
-                Console.WriteLine(item.Key + " : " + item.Value);
         }
 
         private void ReadEncryptKey()
@@ -102,6 +120,44 @@ namespace BZ1
                 }
             }
             Console.WriteLine("can't create key");
+        }
+        private void PrintAnanlytics()
+        {
+            List<Letter> letters = new List<Letter>();
+            letters.Add(new Letter(finalText[0], 0));
+
+            for (int i = 0; i < finalText.Length; i++)
+            {
+                for (int j = 0; j < letters.Count; j++)
+                {
+                    if (finalText[i] == letters[j].value)
+                    {
+                        letters[j].count++;
+                        break;
+                    }
+                    else
+                    {
+                        letters.Add(new Letter(finalText[i], 0));
+                    }
+                }
+            }
+
+            foreach (var item in letters)
+            {
+                Console.WriteLine("Char: " + item.value + " Count: " + item.count);
+            }
+        }
+    }
+
+    public class Letter
+    {
+        public int count;
+        public char value;
+
+        public Letter(char c, int i)
+        {
+            value = c;
+            count = i;
         }
     }
 }

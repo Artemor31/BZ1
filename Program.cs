@@ -13,7 +13,6 @@ namespace BZ1
 
         static void Main(string[] args)
         {
-
             ChooseEncryptor(ReadEncryptorType());
             Console.ReadKey();
         }
@@ -29,7 +28,6 @@ namespace BZ1
             } while (dis < 1 && dis > 3 && !isValid);
             return dis;
         }
-
         static void ChooseEncryptor(int encryptorType)
         {
             IEncryptor encryptor;
@@ -63,7 +61,6 @@ namespace BZ1
             } while (dis < 1 && dis > 2 && !isValid);
             return dis;
         }
-
         static void ChooseEncryptOrDecrypt(int op, IEncryptor encryptor)
         {
             switch (op)

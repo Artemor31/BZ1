@@ -12,7 +12,7 @@ namespace BZ1
 
         private Dictionary<int, char> charsTable = null;
         private int encryptKey, decryptKey, alphabetVal;
-
+        string finalText;
         public void Decrypt() 
         {
             ReadDecryptKey();
@@ -29,7 +29,9 @@ namespace BZ1
                 char s = charsTable[a];
                 stringBuilder.Append(s);
             }
-            Console.WriteLine("New message: " + stringBuilder);
+            finalText = stringBuilder.ToString();
+            Console.WriteLine("New message: " + finalText);
+            PrintAnanlytics();
         }
 
         public void Encrypt()
@@ -44,11 +46,41 @@ namespace BZ1
             {
                 int a = (charsTable.FirstOrDefault(x => x.Value == message[i]).Key + encryptKey) % alphabetVal;
                 char s = charsTable[a];
-                stringBuilder.Append(s); 
+                stringBuilder.Append(s);
             }
-            Console.WriteLine("New message: " + stringBuilder);
+            finalText = stringBuilder.ToString();
+            Console.WriteLine("New message: " + finalText);
+            PrintAnanlytics();
         }
+        private void PrintAnanlytics()
+        {
+            List<Letter> letters = new List<Letter>();
+            letters.Add(new Letter(finalText[0], 0));
+            bool a = false;
 
+            for (int i = 0; i < finalText.Length; i++)
+            {
+                a = true;
+                for (int j = 0; j < letters.Count; j++)
+                {
+                    if (finalText[i] == letters[j].value)
+                    {
+                        a = false;
+                        letters[j].count++;
+                        break;
+                    }
+                }
+                if (a)
+                {
+                    letters.Add(new Letter(finalText[i], 1));
+                }
+            }
+
+            foreach (var item in letters)
+            {
+                Console.WriteLine("Char: " + item.value + " Count: " + item.count);
+            }
+        }
         private void CreateDictionary(string inputFile)
         {
             string str = File.ReadAllText(inputFile);
@@ -60,8 +92,6 @@ namespace BZ1
             for (int i = 0; i < str.Length; i++)
                 charsTable.Add(i, str[i]);
 
-            foreach (var item in charsTable)
-                Console.WriteLine(item.Key + " : " + item.Value);
         }
 
         private void ReadEncryptKey()
